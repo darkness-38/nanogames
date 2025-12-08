@@ -1,37 +1,81 @@
-import './style.css'
-import { CreateGameCard } from './components/GameCard.js'
+import './style.css';
+import { CreateGameCard } from './components/GameCard.js';
+import { ParticleEngine } from './components/Particles.js';
 import { initSnake } from './games/snake/snake.js';
 import { initMemory } from './games/memory/memory.js';
 
+import { initClicker } from './games/clicker/clicker.js';
+
 const app = document.querySelector('#app');
+let currentGameCleanup = null;
 
 const games = [
   {
     id: 'snake',
     title: 'Neon Snake',
-    description: 'Navigate the cyber grid and grow your snake.',
+    description: 'A classic challenge reimagined for the void.',
     icon: '🐍',
-    onPlay: () => loadGame('snake')
+    onPlay: () => navigateTo('/snake')
   },
   {
     id: 'memory',
     title: 'Cyber Memory',
-    description: 'Hack the system by matching data blocks.',
-    icon: '💾',
-    onPlay: () => loadGame('memory')
+    description: 'Test your cognitive pattern matching skills.',
+    icon: '💠',
+    onPlay: () => navigateTo('/memory')
+  },
+  {
+    id: 'clicker',
+    title: 'Cosmic Clicker',
+    description: 'Harvest entropy and dominate the universe.',
+    icon: '🌌',
+    onPlay: () => navigateTo('/clicker')
   }
 ];
 
+// --- Routing ---
+function navigateTo(url) {
+  history.pushState(null, null, url);
+  handleRoute();
+}
+
+function handleRoute() {
+  const path = window.location.pathname;
+  if (currentGameCleanup) {
+    currentGameCleanup();
+    currentGameCleanup = null;
+  }
+
+  if (path === '/snake') {
+    renderGame('snake');
+  } else if (path === '/memory') {
+    renderGame('memory');
+  } else if (path === '/clicker') {
+    renderGame('clicker');
+  } else {
+    if (path !== '/') history.replaceState(null, null, '/');
+    renderHub();
+  }
+}
+window.addEventListener('popstate', handleRoute);
+
+// --- Rendering ---
 function renderHub() {
   app.innerHTML = `
+    <canvas id="particles-canvas"></canvas>
     <div class="hero-section">
-      <h1 class="hero-title"><span class="glow-text">NANO</span>GAMES</h1>
-      <p class="hero-subtitle">Premium Mini-Games Collection</p>
+
+      <h1 class="hero-title">Experience liftoff<br>with NanoGames.</h1>
+      <p class="hero-subtitle">Meticulously crafted mini-games for your cognitive pleasure.</p>
     </div>
     <div class="container">
       <div id="games-grid" class="games-grid"></div>
     </div>
   `;
+
+  // Init Particles
+  const canvas = document.getElementById('particles-canvas');
+  if (canvas) new ParticleEngine(canvas);
 
   const grid = document.querySelector('#games-grid');
   if (grid) {
@@ -41,30 +85,31 @@ function renderHub() {
   }
 }
 
-function loadGame(gameId) {
-  console.log('Loading game:', gameId);
+function renderGame(gameId) {
   app.innerHTML = `
-    <div class="container" style="padding-top: 50px; text-align: center;">
-      <h1 class="glow-text" style="margin-bottom: 2rem;">${gameId.toUpperCase()}</h1>
-      <div id="game-container" style="display: flex; flex-direction: column; align-items: center;"></div>
-      <button class="btn-primary" id="back-btn" style="margin-top: 2rem;">Back to Hub</button>
+    <canvas id="particles-canvas"></canvas>
+    <div class="container game-view">
+      <h1 class="hero-title" style="font-size: 3rem; margin-bottom: 2rem;">${gameId.toUpperCase()}</h1>
+      <div id="game-container" class="game-container"></div>
+      <button class="btn-primary" id="back-btn" style="margin-top: 3rem;">Return Orbit</button>
     </div>
   `;
 
-  const container = document.getElementById('game-container');
-  let cleanup = null;
+  // Init Particles (background persists style-wise)
+  const canvas = document.getElementById('particles-canvas');
+  if (canvas) new ParticleEngine(canvas);
 
+  const container = document.getElementById('game-container');
   if (gameId === 'snake') {
-    cleanup = initSnake(container);
+    currentGameCleanup = initSnake(container);
   } else if (gameId === 'memory') {
-    cleanup = initMemory(container);
+    currentGameCleanup = initMemory(container);
+  } else if (gameId === 'clicker') {
+    currentGameCleanup = initClicker(container);
   }
 
-  document.getElementById('back-btn').onclick = () => {
-    if (cleanup) cleanup();
-    renderHub();
-  };
+  document.getElementById('back-btn').onclick = () => navigateTo('/');
 }
 
-// Initialize
-renderHub();
+// Start
+document.addEventListener('DOMContentLoaded', handleRoute);

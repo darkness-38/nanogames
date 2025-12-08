@@ -1,115 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap');
 
 :root {
-  /* Colors */
-  --bg-app: #050505;
-  --bg-surface: #121212;
-  --bg-card: #1e1e1e;
-
-  --color-primary: #00f3ff;
-  --color-secondary: #ff00ff;
-  --color-accent: #0aff00;
+  /* Colors - Deep Space Theme */
+  --bg-app: #0a0a0f;
+  --bg-surface: rgba(255, 255, 255, 0.03);
+  --color-primary: #ffffff;
+  --color-accent: #3b82f6;
+  /* Subtle blue */
 
   --text-main: #ffffff;
-  --text-muted: #a0a0a0;
-
-  /* Effects */
-  --glow-primary: 0 0 10px rgba(0, 243, 255, 0.5);
-  --glow-secondary: 0 0 10px rgba(255, 0, 255, 0.5);
-  --glass: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-muted: #888899;
 
   /* Spacing */
-  --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
-  --spacing-md: 2rem;
-  --spacing-lg: 4rem;
+  --spacing-md: 2.5rem;
+  --spacing-lg: 5rem;
 
   /* Typography */
-  --font-main: 'Outfit', sans-serif;
-}
-
-/* Page Layouts */
-.hero-section {
-  min-height: 80vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  background: radial-gradient(circle at center, rgba(0, 243, 255, 0.1) 0%, transparent 70%);
-}
-
-.hero-title {
-  font-size: 5rem;
-  font-weight: 700;
-  margin-bottom: var(--spacing-sm);
-  letter-spacing: -2px;
-}
-
-.hero-subtitle {
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-lg);
-  max-width: 600px;
-}
-
-.games-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--spacing-md);
-  padding: var(--spacing-lg) 0;
-}
-
-/* Game Card */
-.game-card {
-  background: var(--bg-card);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: var(--spacing-md);
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-}
-
-.game-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border-color: var(--color-primary);
-}
-
-.card-icon {
-  font-size: 3rem;
-  margin-bottom: var(--spacing-sm);
-}
-
-.card-title {
-  font-size: 1.5rem;
-  margin-bottom: var(--spacing-xs);
-  color: var(--text-main);
-}
-
-.card-desc {
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-md);
-  font-size: 0.9rem;
-}
-
-.game-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  transition: 0.5s;
-}
-
-.game-card:hover::before {
-  left: 100%;
+  --font-main: 'Space Grotesk', sans-serif;
 }
 
 * {
@@ -122,9 +30,20 @@ body {
   font-family: var(--font-main);
   background-color: var(--bg-app);
   color: var(--text-main);
-  line-height: 1.6;
+  line-height: 1.5;
   overflow-x: hidden;
   min-height: 100vh;
+}
+
+/* Canvas Background */
+#particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 a {
@@ -140,59 +59,142 @@ button {
 
 /* Utilities */
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 var(--spacing-sm);
+  padding: 0 var(--spacing-md);
+  position: relative;
+  z-index: 1;
 }
 
-.glow-text {
-  text-shadow: var(--glow-primary);
-}
-
+/* UI Elements */
 .btn-primary {
-  background: transparent;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 5px rgba(0, 243, 255, 0.2);
+  background: var(--color-primary);
+  color: var(--bg-app);
+  padding: 1rem 2.5rem;
+  font-weight: 500;
+  border-radius: 50px;
+  /* Pill shape */
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: var(--color-primary);
-  color: var(--bg-app);
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
 }
 
-/* Hidden helper */
-.hidden {
-  display: none !important;
+/* Hero Section - Matching Reference */
+.hero-section {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  padding-top: 5vh;
 }
 
-/* Memory Game */
+
+
+.hero-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 500;
+  /* Regular weight like reference */
+  letter-spacing: -2px;
+  line-height: 1.1;
+  margin-bottom: var(--spacing-sm);
+  background: linear-gradient(to bottom right, #fff, #aaa);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 300;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-lg);
+  max-width: 800px;
+}
+
+/* Games Grid */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: var(--spacing-md);
+  margin-top: -10vh;
+  /* Overlap hero slightly */
+}
+
+/* Minimal Game Card */
+.game-card {
+  background: var(--bg-surface);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  padding: var(--spacing-md);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+}
+
+.game-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-10px);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-sm);
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.card-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Game View Styles */
+.game-view {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Keep Memory Game Styles */
 .memory-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-sm);
-  max-width: 600px;
-  margin: 0 auto;
+  gap: 15px;
+  max-width: 500px;
 }
 
 .memory-card {
   aspect-ratio: 1;
-  background-color: transparent;
   perspective: 1000px;
   cursor: pointer;
 }
 
 .memory-card-inner {
-  position: relative;
   width: 100%;
   height: 100%;
-  text-align: center;
+  position: relative;
   transition: transform 0.6s;
   transform-style: preserve-3d;
 }
@@ -207,29 +209,25 @@ button {
   width: 100%;
   height: 100%;
   backface-visibility: hidden;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
 }
 
 .memory-card-front {
-  background-color: var(--bg-surface);
-  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
 }
 
 .memory-card-back {
-  background-color: var(--color-primary);
-  color: var(--bg-app);
+  background: #fff;
+  color: #000;
   transform: rotateY(180deg);
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
 }
 
 .memory-card.matched .memory-card-back {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
-  box-shadow: 0 0 20px rgba(10, 255, 0, 0.5);
+  background: #3b82f6;
+  color: #fff;
 }
